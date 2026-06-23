@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kenzo Oriental Food — Cardápio</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0d0a0a;color:#f4ede1;font-family:Arial,sans-serif;min-height:100vh}
+:root{--red:#c21f2e;--gold:#d4a843;--ink:#0d0a0a;--ink2:#171211;--line:rgba(244,237,225,0.12)}
+
+/* HEADER */
+header{text-align:center;padding:32px 16px 24px;border-bottom:1px solid var(--line);background:radial-gradient(ellipse 800px 400px at 50% 0%,rgba(194,31,46,0.25),transparent)}
+.logo-circle{width:54px;height:54px;border:2px solid #f4ede1;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;background:#111}
+.logo-circle svg{width:26px;height:26px}
+.eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+h1{font-size:clamp(42px,10vw,80px);line-height:1;letter-spacing:2px;font-weight:900;color:#fff;text-shadow:0 0 40px rgba(194,31,46,0.5)}
+h1 span{color:var(--red)}
+.hero-sub{color:#ff6b6b;font-size:16px;margin-top:6px;font-style:italic}
+.hero-meta{margin-top:14px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap;font-size:12px;color:rgba(244,237,225,0.5)}
+.hero-meta strong{color:#f4ede1}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:40;background:rgba(13,10,10,0.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);overflow-x:auto;white-space:nowrap;padding:10px 12px;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{background:transparent;border:1px solid var(--line);color:rgba(244,237,225,0.6);font-size:12px;font-weight:600;padding:7px 13px;border-radius:100px;margin-right:7px;cursor:pointer;transition:.15s}
+nav button:hover{border-color:var(--red);color:#fff}
+nav button.active{background:var(--red);border-color:var(--red);color:#fff}
+
+/* LAYOUT */
+.layout{max-width:1160px;margin:0 auto;padding:24px 14px 120px;display:grid;grid-template-columns:1fr;gap:20px}
+@media(min-width:960px){.layout{grid-template-columns:1fr 350px;align-items:start}}
+
+/* SECTION */
+section.cat{margin-bottom:32px;scroll-margin-top:66px}
+.cat-head{display:flex;align-items:baseline;gap:10px;padding-bottom:10px;border-bottom:2px solid var(--red);margin-bottom:12px}
+.cat-head h2{font-size:26px;font-weight:900;letter-spacing:1px;color:#fff}
+.cat-note{font-size:11px;color:var(--gold);font-weight:700;letter-spacing:.5px}
+.cat-desc{font-size:12px;color:rgba(244,237,225,0.45);margin-bottom:14px;line-height:1.5}
+
+.grid-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:9px}
+
+/* ITEM CARD */
+.item{background:rgba(255,255,255,0.03);border:1px solid var(--line);border-radius:10px;padding:12px 13px;display:flex;justify-content:space-between;align-items:center;gap:10px;cursor:pointer;transition:.15s}
+.item:hover{border-color:rgba(194,31,46,0.5);transform:translateY(-1px)}
+.item.selected{border-color:var(--red);background:rgba(194,31,46,0.12)}
+.item-name{font-size:13.5px;font-weight:600;color:#f4ede1;line-height:1.3}
+.item-desc{font-size:11px;color:rgba(244,237,225,0.4);margin-top:2px;line-height:1.4}
+.combo-list{font-size:10.5px;color:rgba(244,237,225,0.4);margin-top:4px;line-height:1.5}
+.item-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.item-price{font-weight:700;font-size:14px;color:var(--gold);white-space:nowrap}
+
+.qty-box{display:flex;align-items:center;background:#111;border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.qty-box button{width:26px;height:26px;background:transparent;border:none;color:#f4ede1;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.qty-box button:hover{background:var(--red)}
+.qty-box span{width:22px;text-align:center;font-size:13px;font-weight:700}
+.add-btn{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--gold);color:var(--gold);background:transparent;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.add-btn:hover{background:var(--gold);color:#0d0a0a}
+
+/* POKE */
+.poke-card{background:rgba(255,255,255,0.03);border:1px solid var(--line);border-radius:12px;padding:16px}
+.size-row{display:flex;gap:9px;margin-bottom:14px}
+.size-btn{flex:1;border:1px solid var(--line);background:#111;color:#f4ede1;padding:10px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:700;text-align:center}
+.size-btn b{display:block;color:var(--gold);font-size:14px;margin-top:2px}
+.size-btn.active{border-color:var(--red);background:rgba(194,31,46,0.18)}
+.pg-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gold);margin-bottom:3px}
+.pg-rule{font-size:11px;color:rgba(244,237,225,0.4);margin-bottom:7px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.chip{border:1px solid var(--line);background:#111;color:rgba(244,237,225,0.75);padding:6px 11px;border-radius:100px;font-size:11.5px;cursor:pointer}
+.chip.active{background:var(--red);border-color:var(--red);color:#fff;font-weight:600}
+.chip.blocked{opacity:.3;cursor:not-allowed}
+.poke-add{width:100%;margin-top:4px;background:var(--red);border:none;color:#fff;padding:12px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer}
+.poke-add:hover{background:#a01020}
+.poke-hint{font-size:11px;color:#ff6b6b;margin-top:6px;min-height:15px}
+
+/* CART */
+.cart-wrap{position:sticky;top:66px}
+.cart{background:rgba(255,255,255,0.03);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.cart-hd{padding:14px 16px;border-bottom:1px dashed var(--line);display:flex;align-items:center;justify-content:space-between}
+.cart-hd h3{font-size:20px;font-weight:900;letter-spacing:1px;color:#fff}
+.cart-hd span{font-size:10px;color:var(--gold);letter-spacing:.5px}
+.cart-body{padding:12px 16px;max-height:40vh;overflow-y:auto}
+.cart-empty{text-align:center;padding:28px 10px;color:rgba(244,237,225,0.4);font-size:13px}
+.cart-empty .eico{font-size:28px;display:block;margin-bottom:8px}
+.cart-line{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding:9px 0;border-bottom:1px solid var(--line)}
+.cart-line:last-child{border-bottom:none}
+.cl-name{font-size:13px;font-weight:600;color:#f4ede1;line-height:1.3}
+.cl-meta{font-size:10.5px;color:rgba(244,237,225,0.4);margin-top:2px}
+.cl-right{text-align:right;flex-shrink:0}
+.cl-price{color:var(--gold);font-weight:700;font-size:13px}
+.cl-rm{background:none;border:none;color:rgba(244,237,225,0.35);font-size:11px;cursor:pointer;text-decoration:underline;margin-top:4px;display:block}
+.cl-rm:hover{color:#ff6b6b}
+.cart-foot{padding:14px 16px;border-top:1px dashed var(--line);background:rgba(0,0,0,0.15)}
+.field{margin-bottom:11px}
+.field label{display:block;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:rgba(244,237,225,0.5);margin-bottom:5px}
+.field input,.field select,.field textarea{width:100%;background:#111;border:1px solid var(--line);color:#f4ede1;padding:9px 11px;border-radius:7px;font-size:13px;font-family:Arial,sans-serif}
+.field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23d4a843' stroke-width='3'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:30px}
+.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--red);border-color:var(--red)}
+.field textarea{resize:vertical;min-height:50px}
+.sum-row{display:flex;justify-content:space-between;font-size:12.5px;color:rgba(244,237,225,0.65);padding:3px 0}
+.sum-row.total{font-size:17px;font-weight:800;color:#fff;border-top:1px solid var(--line);margin-top:7px;padding-top:9px}
+.sum-row.total .val{color:var(--gold)}
+.confirm-btn{width:100%;margin-top:12px;background:linear-gradient(135deg,var(--red),#e63946);border:none;color:#fff;padding:13px;border-radius:9px;font-size:17px;font-weight:900;letter-spacing:1px;cursor:pointer}
+.confirm-btn:hover{filter:brightness(1.1)}
+.confirm-btn:disabled{background:#222;color:rgba(244,237,225,0.3);cursor:not-allowed}
+.err{font-size:12px;color:#ff6b6b;background:rgba(255,77,77,0.1);border:1px solid rgba(255,77,77,0.3);padding:7px 10px;border-radius:6px;margin-top:8px}
+
+/* MOBILE BAR */
+.mob-bar{position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(13,10,10,0.97);border-top:1px solid var(--line);padding:11px 16px;display:none;align-items:center;justify-content:space-between;gap:10px}
+.mob-bar.show{display:flex}
+@media(min-width:960px){.mob-bar{display:none!important}}
+.mob-info{font-size:12px;color:rgba(244,237,225,0.55)}
+.mob-info strong{display:block;font-size:16px;font-weight:800;color:var(--gold)}
+.mob-btn{background:linear-gradient(135deg,var(--red),#e63946);border:none;color:#fff;padding:11px 20px;border-radius:9px;font-size:15px;font-weight:900;letter-spacing:1px;cursor:pointer}
+
+/* MODAL */
+.overlay{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,0.6);display:flex;align-items:flex-end;justify-content:center}
+.sheet{width:100%;max-width:500px;max-height:88vh;background:#0d0a0a;border-radius:18px 18px 0 0;border-top:1px solid var(--line);display:flex;flex-direction:column;overflow:hidden}
+.sheet .cart-body{max-height:none;flex:1;overflow-y:auto}
+.sheet-close{text-align:center;padding:10px}
+.sheet-close button{background:none;border:none;color:rgba(244,237,225,0.45);font-size:13px;cursor:pointer;padding:6px 16px}
+
+/* RECEIPT */
+.receipt-overlay{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;padding:20px}
+.receipt{background:#f4ede1;color:#111;width:100%;max-width:370px;max-height:88vh;overflow-y:auto;padding:24px 22px;border-radius:4px;box-shadow:0 30px 80px rgba(0,0,0,0.6);font-family:Arial,sans-serif}
+.rh{text-align:center;border-bottom:2px dashed rgba(0,0,0,0.2);padding-bottom:12px;margin-bottom:12px}
+.rh h2{font-size:22px;font-weight:900;letter-spacing:1px;color:#111}
+.rh p{font-size:11px;color:#555;margin-top:3px}
+.rh .rl{width:46px;height:46px;border:2px solid #111;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;background:#0d0a0a}
+.rh .rl svg{width:22px;height:22px}
+.rmeta{font-size:12px;line-height:1.7;margin-bottom:12px}
+.rmeta strong{font-weight:700}
+.ritems{border-top:1px dashed rgba(0,0,0,0.2);border-bottom:1px dashed rgba(0,0,0,0.2);padding:8px 0;margin-bottom:10px}
+.rl{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;gap:8px}
+.rl .rn{font-weight:600}
+.rl .rm2{font-size:10.5px;color:#666;display:block}
+.rtot{display:flex;justify-content:space-between;font-size:12.5px;padding:3px 0}
+.rtot.grand{font-size:16px;font-weight:800;border-top:2px solid #111;margin-top:7px;padding-top:9px}
+.rfoot{text-align:center;margin-top:14px;font-size:11px;color:#666}
+.rfoot em{display:block;font-size:19px;color:var(--red);font-style:normal;margin-top:5px}
+.rcopy{width:100%;margin-top:14px;background:transparent;color:#111;border:1.5px solid #111;padding:10px;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer}
+.rnew{width:100%;margin-top:7px;background:#111;color:#f4ede1;border:none;padding:11px;border-radius:7px;font-size:15px;font-weight:900;letter-spacing:1px;cursor:pointer}
+
+footer{text-align:center;padding:24px 16px 110px;font-size:12px;color:rgba(244,237,225,0.35)}
+footer .ph{color:var(--gold);font-weight:700;font-size:14px;margin-bottom:3px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-circle">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#f4ede1" stroke-width="2"><path d="M3 7h18M5 7v2M19 7v2M7 9v12M17 9v12M3 11h18"/></svg>
+  </div>
+  <div class="eyebrow">Kenzo · Oriental Food</div>
+  <h1>KENZO <span>ORIENTAL</span></h1>
+  <div class="hero-sub">Sabor que acende todos os sentidos!</div>
+  <div class="hero-meta">
+    <span>📞 <strong>(19) 98250-9707</strong></span>
+    <span>🛵 <strong>Consulte taxa de entrega</strong></span>
+    <span>📅 <strong>Válido desde Março 2026</strong></span>
+  </div>
+</header>
+
+<nav id="nav"></nav>
+
+<div class="layout">
+  <main id="menu"></main>
+  <aside>
+    <div class="cart-wrap">
+      <div class="cart" id="cart-panel"></div>
+    </div>
+  </aside>
+</div>
+
+<div class="mob-bar" id="mob-bar">
+  <div class="mob-info">
+    <span id="mob-count">0 itens</span>
+    <strong id="mob-total">R$ 0,00</strong>
+  </div>
+  <button class="mob-btn" onclick="openMobileCart()">Ver pedido</button>
+</div>
+
+<div class="overlay" id="modal" style="display:none" onclick="if(event.target===this)closeMobileCart()">
+  <div class="sheet">
+    <div id="modal-cart"></div>
+    <div class="sheet-close"><button onclick="closeMobileCart()">Fechar</button></div>
+  </div>
+</div>
+
+<div class="receipt-overlay" id="receipt-overlay" style="display:none" onclick="if(event.target===this)closeReceipt()">
+  <div class="receipt" id="receipt-box"></div>
+</div>
+
+<footer>
+  <div class="ph">(19) 98250-9707</div>
+  Peça pelo delivery · Consulte taxa de entrega
+</footer>
+
+<script>
+/* ============ DATA ============ */
+const ZONES = [
+  {id:"ret", label:"Retirar no balcão", price:0},
+  {id:"z1",  label:"Centro / até 3 km", price:6},
+  {id:"z2",  label:"Bairros próximos / até 6 km", price:10},
+  {id:"z3",  label:"Zona estendida / até 10 km", price:15},
+  {id:"z4",  label:"Fora do raio (consultar)", price:20},
+];
+
+const CATS = [
+  {id:"yakisoba",title:"Yakisoba",note:"600g",desc:"Massa no ponto perfeito, legumes selecionados e tempero oriental exclusivo.",items:[
+    {id:"yk1",name:"Legumes",price:28},
+    {id:"yk2",name:"Frango",price:32},
+    {id:"yk3",name:"Carne",price:35},
+    {id:"yk4",name:"Misto",price:38},
+  ]},
+  {id:"entradas",title:"Entradas",desc:"",items:[
+    {id:"en1",name:"Carpaccio Salmão",desc:"Fatias de salmão com molho cítrico.",price:36},
+    {id:"en2",name:"Ceviche Salmão",desc:"Fatias de salmão com molho cítrico.",price:39},
+  ]},
+  {id:"sashimi",title:"Sashimi",desc:"Maçaricado acrescenta R$ 2,00 a cada 5 fatias.",items:[
+    {id:"sa1",name:"Sashimi 5 unidades",desc:"5 fatias finas de salmão",price:35},
+    {id:"sa2",name:"Sashimi 10 unidades",desc:"10 fatias finas de salmão",price:60},
+    {id:"sa3",name:"Sashimi 15 unidades",desc:"15 fatias finas de salmão",price:75},
+  ]},
+  {id:"niguiri",title:"Niguiri",note:"6 unidades",desc:"",items:[
+    {id:"ni1",name:"Salmão",price:26},
+    {id:"ni2",name:"Salmão maçaricado",price:28},
+    {id:"ni3",name:"Kani",price:26},
+    {id:"ni4",name:"Skin",price:22},
+  ]},
+  {id:"hossomaki",title:"Hossomaki",note:"8 unidades",desc:"",items:[
+    {id:"ho1",name:"Salmão",price:25},
+    {id:"ho2",name:"Salmão grelhado",price:24},
+    {id:"ho3",name:"Pepino",price:22},
+    {id:"ho4",name:"Kani-kama",price:25},
+  ]},
+  {id:"uramaki",title:"Uramaki",note:"8 unidades",desc:"",items:[
+    {id:"ur1",name:"Salmão",price:27},
+    {id:"ur2",name:"Salmão grelhado",price:26},
+    {id:"ur3",name:"Kani",price:27},
+    {id:"ur4",name:"Skin",price:25},
+    {id:"ur5",name:"Califórnia",price:27},
+  ]},
+  {id:"joy",title:"Joy",note:"6 unidades",desc:"",items:[
+    {id:"jo1",name:"Salmão",price:30},
+    {id:"jo2",name:"Salmão maçaricado",price:32},
+    {id:"jo3",name:"Pepino",price:28},
+    {id:"jo4",name:"Crispy ou Doritos",price:30},
+  ]},
+  {id:"hotroll",title:"Hot Roll",desc:"Crispy ou doritos: +R$ 3,00 por porção.",items:[
+    {id:"hr1",name:"Hot Salmão 10 unidades",price:35},
+    {id:"hr2",name:"Hot Salmão 20 unidades",price:60},
+    {id:"hr3",name:"Hot Aberto (salmão crú/grelhado/kani)",price:38},
+  ]},
+  {id:"temaki",title:"Temaki",note:"Unidade",desc:"Crispy de couve ou doritos: +R$ 3,00.",items:[
+    {id:"te1",name:"Salmão simples",price:40},
+    {id:"te2",name:"Salmão crem e cebolinha",price:40},
+    {id:"te3",name:"Empanado",price:40},
+    {id:"te4",name:"Salmão grelhado",price:40},
+    {id:"te5",name:"Temaki Frito",price:40},
+    {id:"te6",name:"Temaki kani",price:40},
+  ]},
+  {id:"combos",title:"Combos",desc:"Não fazemos alteração de peças.",items:[
+    {id:"co1",name:"Combo 1 — 12 peças",price:32,combo:["2 uramakis Skin","2 uramakis salmão","2 hossomakis salmão","2 hossomakis kani","1 Joy Salmão, 1 Joy pepino","1 niguiri Salmão, 1 niguiri Skin"]},
+    {id:"co2",name:"Combo 2 — 28 peças",price:62,combo:["3 niguiris salmão e 3 Skin","4 uramakis california e 4 salmão","4 Joy pepino","4 hossomakis salmão e 4 Kani","2 hossomakis de pepino"]},
+    {id:"co3",name:"Combo 3 — 32 peças",price:72,combo:["2 niguiris salmão","2 niguiris skin","2 Joy pepino","2 Joy salmão","4 hossomakis salmão","4 hossomakis pepino","4 hossomakis kani","4 uramakis salmão","4 uramakis california","4 uramakis skin"]},
+    {id:"co4",name:"Combo 4 — Hot + Temaki Frito",price:46,combo:["1 temaki de salmão frito","5 hot rolls de salmão"]},
+    {id:"co5",name:"Combo 5 — 45 peças",price:125,combo:["4 uramakis salmão, 4 uramakis skin","4 niguiris salmão, 4 niguiris skin","4 hossomakis salmão, 4 hossomakis kani","2 hossomakis pepino","4 joy salmão, 4 joy pepino","7 sashimis","4 hot roll"]},
+  ]},
+  {id:"barcas",title:"Barcas",desc:"Não fazemos alteração de peças.",items:[
+    {id:"ba1",name:"Barca Tradicional — 60 peças",price:150,combo:["4 niguiris salmão","4 niguiris skin","4 Joy pepino","4 Joy salmão","4 hossomakis salmão","4 hossomakis pepino","4 hossomakis kani","4 uramakis salmão","4 uramakis california","4 uramakis skin","10 sashimis salmão","10 hot roll"]},
+    {id:"ba2",name:"Barca Especial — 60 peças",price:180,combo:["8 uramakis salmão","4 uramakis especial","8 hossomakis salmão","4 hossomakis kani","4 niguiri salmão maçaricado","4 niguiri salmão raspa de limão","4 joy salmão","4 joy pepino com doritos","5 sashimis salmão","5 sashimis maçaricados","5 hot roll salmão crispy","5 hot roll salmão"]},
+    {id:"ba3",name:"Barca do Chef — 70 peças",desc:"Seleção surpresa do chef com peças nobres de salmão, diversificadas.",price:200},
+  ]},
+  {id:"burguer",title:"Sushi Burguer",desc:"Recheio à escolha: salmão crú, salmão grelhado ou kani com cream cheese e cebolinha.",items:[
+    {id:"bu1",name:"Sushi Burguer (unidade)",price:40},
+  ]},
+  {id:"adicionais",title:"Adicionais & Molhos",desc:"",items:[
+    {id:"ad1",name:"Wasabi",price:2},
+    {id:"ad2",name:"Gengibre",price:4},
+    {id:"ad3",name:"Shoyu",price:1.5},
+    {id:"ad4",name:"Tarê",price:1.5},
+    {id:"ad5",name:"Crispy couve",price:3},
+    {id:"ad6",name:"Crispy alho poró",price:3},
+    {id:"ad7",name:"Crispy batata doce",price:3},
+    {id:"ad8",name:"Doritos",price:3},
+    {id:"ad9",name:"Caldo de missoshiro 480ml",desc:"missoshiro e cebolinha",price:30},
+  ]},
+];
+
+const POKE_GROUPS = [
+  {key:"base",    title:"Base",            rule:"Escolha 1", max:1, opts:["Arroz japonês","Mix de folhas"]},
+  {key:"prot",    title:"Proteína",        rule:"Escolha 1", max:1, opts:["Salmão crú","Salmão grelhado"]},
+  {key:"acomp",   title:"Acompanhamentos", rule:"Escolha 3", max:3, opts:["Cebola roxa","Doritos","Gengibre","Gergilim","Pimenta tailandesa","Crispy de couve","Crispy de alho poró","Crispy de batata doce","Amêndoas laminadas","Maionese"]},
+  {key:"guarn",   title:"Guarnição",       rule:"Escolha 3", max:3, opts:["Cream cheese","Pepino japonês","Nori (alga)","Cenoura","Tomate cereja","Kani","Manga","Morango"]},
+  {key:"molho",   title:"Molho",           rule:"Escolha 1", max:1, opts:["Shoyu","Tare","Cítrico"]},
+];
+const POKE_SIZES = [{id:"500",label:"500 g",price:45},{id:"750",label:"750 g",price:60}];
+
+/* ============ STATE ============ */
+let cart = []; // {uid, id, name, meta, unitPrice, qty}
+let customerName = "";
+let zone = ZONES[0].id;
+let notes = "";
+let formError = "";
+
+// poke
+let pokeSize = "500";
+let pokeSelections = {base:[],prot:[],acomp:[],guarn:[],molho:[]};
+let pokeHint = "";
+
+let uidCounter = 0;
+function newUid(){ return "u"+(++uidCounter); }
+
+/* ============ HELPERS ============ */
+function fmt(n){ return n.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function getZoneObj(){ return ZONES.find(z=>z.id===zone)||ZONES[0]; }
+function subtotal(){ return cart.reduce((s,c)=>s+c.unitPrice*c.qty,0); }
+function total(){ return subtotal()+getZoneObj().price; }
+function itemCount(){ return cart.reduce((s,c)=>s+c.qty,0); }
+function cartByItemId(id){ return cart.find(c=>c.id===id); }
+
+function addSimple(item, catTitle){
+  const existing = cartByItemId(item.id);
+  if(existing){ existing.qty++; }
+  else { cart.push({uid:newUid(),id:item.id,name:item.name,meta:catTitle,unitPrice:item.price,qty:1}); }
+  render();
+}
+function changeQty(uid, delta){
+  const c = cart.find(x=>x.uid===uid);
+  if(!c) return;
+  c.qty = Math.max(0, c.qty+delta);
+  if(c.qty===0) cart = cart.filter(x=>x.uid!==uid);
+  render();
+}
+function removeLine(uid){
+  cart = cart.filter(x=>x.uid!==uid);
+  render();
+}
+
+function addPoke(){
+  const s = POKE_SIZES.find(x=>x.id===pokeSize);
+  const ps = pokeSelections;
+  if(!ps.base.length||!ps.prot.length||ps.acomp.length<3||ps.guarn.length<3||!ps.molho.length){
+    pokeHint="Complete todas as escolhas antes de adicionar.";
+    setTimeout(()=>{pokeHint="";renderPokeHint();},2400);
+    return;
+  }
+  const meta=`${s.label} · ${ps.base[0]} · ${ps.prot[0]} · ${ps.acomp.join(", ")} · ${ps.guarn.join(", ")} · ${ps.molho[0]}`;
+  cart.push({uid:newUid(),id:"poke-"+Date.now(),name:`Monte seu Poke (${s.label})`,meta,unitPrice:s.price,qty:1});
+  pokeSelections={base:[],prot:[],acomp:[],guarn:[],molho:[]};
+  pokeHint="Poke adicionado!";
+  setTimeout(()=>{pokeHint="";renderPokeHint();},1800);
+  render();
+}
+
+function toggleChip(groupKey, val, max){
+  const arr = pokeSelections[groupKey];
+  if(arr.includes(val)){ pokeSelections[groupKey]=arr.filter(v=>v!==val); }
+  else if(arr.length>=max){
+    if(max===1){ pokeSelections[groupKey]=[val]; }
+    else{ pokeHint=`Máximo de ${max} itens nessa seção.`; setTimeout(()=>{pokeHint="";renderPokeHint();},2200); return; }
+  } else { pokeSelections[groupKey]=[...arr,val]; }
+  renderPokeSection();
+}
+
+function confirm(){
+  formError="";
+  if(cart.length===0){formError="Adicione pelo menos um item.";render();return;}
+  if(!customerName.trim()){formError="Informe o nome de quem está pedindo.";render();return;}
+  showReceipt();
+}
+
+/* ============ RECEIPT ============ */
+function showReceipt(){
+  const ticketNum=Math.floor(1000+Math.random()*9000);
+  const zo=getZoneObj();
+  const sub=subtotal(), tot=total();
+  const date=new Date();
+  const items=[...cart];
+
+  function buildText(){
+    let t=["*KENZO ORIENTAL FOOD*",`Pedido #${ticketNum}`,`Cliente: ${customerName}`,`Entrega: ${zo.label}`,""];
+    items.forEach(it=>{
+      t.push(`${it.qty}x ${it.name} — R$ ${fmt(it.unitPrice*it.qty)}`);
+      if(it.meta) t.push(`   ${it.meta}`);
+    });
+    t.push("",`Subtotal: R$ ${fmt(sub)}`,`Entrega: R$ ${fmt(zo.price)}`,`*Total: R$ ${fmt(tot)}*`);
+    if(notes.trim()) t.push(`\nObs: ${notes.trim()}`);
+    return t.join("\n");
+  }
+
+  let copied=false;
+  const box=document.getElementById("receipt-box");
+  function renderR(){
+    box.innerHTML=`
+      <div class="rh">
+        <div class="rl" style="width:46px;height:46px;border:2px solid #111;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;background:#0d0a0a">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f4ede1" stroke-width="2"><path d="M3 7h18M5 7v2M19 7v2M7 9v12M17 9v12M3 11h18"/></svg>
+        </div>
+        <h2>KENZO ORIENTAL FOOD</h2>
+        <p>Pedido confirmado · Ticket #${ticketNum}</p>
+      </div>
+      <div class="rmeta">
+        <div><strong>Cliente:</strong> ${customerName}</div>
+        <div><strong>Entrega:</strong> ${zo.label}</div>
+        <div><strong>Data:</strong> ${date.toLocaleDateString("pt-BR")} ${date.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})}</div>
+        ${notes.trim()?`<div><strong>Obs:</strong> ${notes.trim()}</div>`:""}
+      </div>
+      <div class="ritems">
+        ${items.map(it=>`
+          <div class="rl">
+            <span class="rn">${it.qty}x ${it.name}${it.meta?`<span class="rm2">${it.meta}</span>`:""}</span>
+            <span>R$ ${fmt(it.unitPrice*it.qty)}</span>
+          </div>
+        `).join("")}
+      </div>
+      <div class="rtot"><span>Subtotal</span><span>R$ ${fmt(sub)}</span></div>
+      <div class="rtot"><span>Taxa de entrega</span><span>R$ ${fmt(zo.price)}</span></div>
+      <div class="rtot grand"><span>Total</span><span>R$ ${fmt(tot)}</span></div>
+      <div class="rfoot">Apresente este ticket ao entregador ou no balcão.<em>Itadakimasu! 健康</em></div>
+      <button class="rcopy" onclick="copyR()">${copied?"✓ Copiado!":"Copiar pedido para enviar"}</button>
+      <button class="rnew" onclick="newOrder()">Novo pedido</button>
+    `;
+  }
+  window.copyR=function(){
+    const text=buildText();
+    if(navigator.clipboard){ navigator.clipboard.writeText(text).then(()=>{copied=true;renderR();}); }
+    else{ const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");document.body.removeChild(ta);copied=true;renderR(); }
+  };
+  window.newOrder=function(){
+    cart=[];customerName="";notes="";formError="";
+    document.getElementById("receipt-overlay").style.display="none";
+    render();
+  };
+  renderR();
+  document.getElementById("receipt-overlay").style.display="flex";
+}
+function closeReceipt(){ document.getElementById("receipt-overlay").style.display="none"; }
+
+/* ============ RENDER ============ */
+function cartLinesHTML(){
+  if(!cart.length) return `<div class="cart-empty"><span class="eico">🍱</span>Seu pedido está vazio.<br>Toque nos itens para adicionar.</div>`;
+  return cart.map(line=>`
+    <div class="cart-line">
+      <div>
+        <div class="cl-name">${line.qty}x ${line.name}</div>
+        ${line.meta?`<div class="cl-meta">${line.meta}</div>`:""}
+      </div>
+      <div class="cl-right">
+        <div class="cl-price">R$ ${fmt(line.unitPrice*line.qty)}</div>
+        ${line.id.startsWith("poke-")
+          ? `<button class="cl-rm" onclick="removeLine('${line.uid}')">remover</button>`
+          : `<div class="qty-box">
+              <button onclick="changeQty('${line.uid}',-1)">−</button>
+              <span>${line.qty}</span>
+              <button onclick="changeQty('${line.uid}',1)">+</button>
+             </div>`
+        }
+      </div>
+    </div>
+  `).join("");
+}
+
+function cartFootHTML(){
+  const zo=getZoneObj();
+  return `
+    <div class="cart-foot">
+      <div class="field">
+        <label>Nome de quem está pedindo</label>
+        <input type="text" placeholder="Seu nome" value="${customerName.replace(/"/g,'&quot;')}" oninput="customerName=this.value">
+      </div>
+      <div class="field">
+        <label>Local de entrega</label>
+        <select onchange="zone=this.value;render()">
+          ${ZONES.map(z=>`<option value="${z.id}"${z.id===zone?" selected":""}>${z.label}${z.price>0?" — R$ "+fmt(z.price):" — grátis"}</option>`).join("")}
+        </select>
+      </div>
+      <div class="field">
+        <label>Observações (opcional)</label>
+        <textarea placeholder="Ex: sem cebola, pimenta à parte..." oninput="notes=this.value">${notes}</textarea>
+      </div>
+      <div class="sum-row"><span>Subtotal</span><span>R$ ${fmt(subtotal())}</span></div>
+      <div class="sum-row"><span>Taxa de entrega</span><span>R$ ${fmt(zo.price)}</span></div>
+      <div class="sum-row total"><span>Total</span><span class="val">R$ ${fmt(total())}</span></div>
+      ${formError?`<div class="err">${formError}</div>`:""}
+      <button class="confirm-btn" onclick="confirm()">FINALIZAR PEDIDO</button>
+    </div>
+  `;
+}
+
+function renderCartPanel(container){
+  container.innerHTML=`
+    <div class="cart-hd">
+      <h3>Seu Pedido</h3>
+      <span>comanda</span>
+    </div>
+    <div class="cart-body">${cartLinesHTML()}</div>
+    ${cartFootHTML()}
+  `;
+}
+
+function renderPokeHint(){
+  const el=document.getElementById("poke-hint");
+  if(el) el.textContent=pokeHint;
+}
+function renderPokeSection(){
+  const el=document.getElementById("poke-section");
+  if(!el) return;
+  el.innerHTML=pokeInnerHTML();
+}
+function pokeInnerHTML(){
+  const sz=POKE_SIZES.find(x=>x.id===pokeSize);
+  return `
+    <div class="size-row">
+      ${POKE_SIZES.map(s=>`<button class="size-btn${s.id===pokeSize?" active":""}" onclick="pokeSize='${s.id}';renderPokeSection()">${s.label}<b>R$ ${fmt(s.price)}</b></button>`).join("")}
+    </div>
+    ${POKE_GROUPS.map(g=>{
+      const sel=pokeSelections[g.key];
+      return `
+        <div class="pg-title">${g.title}</div>
+        <div class="pg-rule">${g.rule}${g.max>1?" ("+sel.length+"/"+g.max+")":""}</div>
+        <div class="chips">
+          ${g.opts.map(o=>{
+            const active=sel.includes(o);
+            const blocked=!active&&sel.length>=g.max&&g.max>1;
+            return `<button class="chip${active?" active":""}${blocked?" blocked":""}" onclick="toggleChip('${g.key}','${o}',${g.max})">${o}</button>`;
+          }).join("")}
+        </div>
+      `;
+    }).join("")}
+    <button class="poke-add" onclick="addPoke()">Adicionar Poke ao pedido</button>
+    <div class="poke-hint" id="poke-hint">${pokeHint}</div>
+  `;
+}
+
+function renderMenu(){
+  const main=document.getElementById("menu");
+  const navEl=document.getElementById("nav");
+  const allCats=[...CATS,{id:"poke",title:"Monte seu Poke"}];
+
+  // NAV
+  navEl.innerHTML=allCats.map(c=>`<button id="navbtn-${c.id}" onclick="scrollTo('${c.id}')">${c.title}</button>`).join("");
+
+  // SECTIONS
+  main.innerHTML=CATS.map(cat=>`
+    <section class="cat" id="sec-${cat.id}">
+      <div class="cat-head">
+        <h2>${cat.title}</h2>
+        ${cat.note?`<span class="cat-note">${cat.note}</span>`:""}
+      </div>
+      ${cat.desc?`<p class="cat-desc">${cat.desc}</p>`:""}
+      <div class="grid-items" id="grid-${cat.id}">
+        ${renderCatItems(cat)}
+      </div>
+    </section>
+  `).join("")
+  + `
+    <section class="cat" id="sec-poke">
+      <div class="cat-head"><h2>Monte seu Poke</h2></div>
+      <p class="cat-desc">Monte do seu jeito: tamanho, base, proteína, acompanhamentos e molho.</p>
+      <div class="poke-card"><div id="poke-section">${pokeInnerHTML()}</div></div>
+    </section>
+  `;
+}
+
+function renderCatItems(cat){
+  return cat.items.map(item=>{
+    const c=cartByItemId(item.id);
+    const qty=c?c.qty:0;
+    return `
+      <div class="item${qty>0?" selected":""}" id="item-${item.id}" onclick="if(${qty===0})addSimple({id:'${item.id}',name:'${item.name.replace(/'/g,"\\'")}',price:${item.price}},'${cat.title}')">
+        <div>
+          <div class="item-name">${item.name}</div>
+          ${item.desc?`<div class="item-desc">${item.desc}</div>`:""}
+          ${item.combo?`<div class="combo-list">${item.combo.join(" · ")}</div>`:""}
+        </div>
+        <div class="item-right">
+          <div class="item-price">R$ ${fmt(item.price)}</div>
+          ${qty>0
+            ? `<div class="qty-box" onclick="event.stopPropagation()">
+                <button onclick="changeQty('${c.uid}',-1)">−</button>
+                <span>${qty}</span>
+                <button onclick="changeQty('${c.uid}',1)">+</button>
+               </div>`
+            : `<button class="add-btn" onclick="event.stopPropagation();addSimple({id:'${item.id}',name:'${item.name.replace(/'/g,"\\'")}',price:${item.price}},'${cat.title}')">+</button>`
+          }
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function updateItems(){
+  CATS.forEach(cat=>{
+    const grid=document.getElementById("grid-"+cat.id);
+    if(grid) grid.innerHTML=renderCatItems(cat);
+  });
+}
+
+function updateMobileBar(){
+  const bar=document.getElementById("mob-bar");
+  const cnt=itemCount();
+  bar.className="mob-bar"+(cnt>0?" show":"");
+  document.getElementById("mob-count").textContent=cnt+" "+(cnt===1?"item":"itens");
+  document.getElementById("mob-total").textContent="R$ "+fmt(total());
+}
+
+function render(){
+  renderCartPanel(document.getElementById("cart-panel"));
+  updateItems();
+  updateMobileBar();
+}
+
+/* MOBILE MODAL */
+function openMobileCart(){
+  document.getElementById("modal").style.display="flex";
+  renderCartPanel(document.getElementById("modal-cart"));
+}
+function closeMobileCart(){ document.getElementById("modal").style.display="none"; }
+
+/* SCROLLSPY */
+function scrollTo(id){
+  const el=document.getElementById("sec-"+id);
+  if(!el) return;
+  window.scrollTo({top:el.getBoundingClientRect().top+window.scrollY-60,behavior:"smooth"});
+}
+
+window.addEventListener("scroll",function(){
+  const allCats=[...CATS,{id:"poke"}];
+  let current=allCats[0].id;
+  allCats.forEach(c=>{
+    const el=document.getElementById("sec-"+c.id);
+    if(el&&el.getBoundingClientRect().top-80<=0) current=c.id;
+  });
+  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+  const active=document.getElementById("navbtn-"+current);
+  if(active){ active.classList.add("active"); active.scrollIntoView({block:"nearest",inline:"center"}); }
+},{passive:true});
+
+/* INIT */
+renderMenu();
+render();
+</script>
+</body>
+</html>
