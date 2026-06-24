@@ -409,173 +409,254 @@ function showReceipt(){
   }
 
   function drawReceiptCanvas(){
-    // Build canvas image of the receipt
-    const W=600;
-    const LINE_H=22;
-    const PAD=32;
-    const FONT="Arial";
+    // ── Layout constants ── (matches the paper/bege receipt in the screenshot)
+    const SCALE = 2;          // retina sharpness
+    const W = 380;            // logical width (matches ~mobile width of receipt)
+    const PAD = 28;
+    const F = "Arial";
+    const COL_BG   = "#f5f0e6";  // warm paper beige
+    const COL_TEXT = "#1a1a1a";
+    const COL_SUB  = "#555555";
+    const COL_DASH = "#cccccc";
+    const COL_BOLD = "#000000";
 
-    // measure height first
-    const lineCount=4+2+(notes.trim()?1:0)+1+items.length*2+5+2;
-    const H=Math.max(600, PAD*2+180+lineCount*LINE_H+60);
-
-    const cv=document.createElement("canvas");
-    cv.width=W; cv.height=H;
-    const cx=cv.getContext("2d");
-
-    // BG
-    cx.fillStyle="#0d0a0a";
-    cx.fillRect(0,0,W,H);
-
-    // red top bar
-    cx.fillStyle="#c21f2e";
-    cx.fillRect(0,0,W,8);
-
-    // red bottom bar
-    cx.fillStyle="#c21f2e";
-    cx.fillRect(0,H-8,W,8);
-
-    // header bg
-    const grd=cx.createLinearGradient(0,0,W,0);
-    grd.addColorStop(0,"rgba(194,31,46,0.3)");
-    grd.addColorStop(1,"rgba(194,31,46,0.05)");
-    cx.fillStyle=grd;
-    cx.fillRect(0,8,W,110);
-
-    // Logo circle
-    cx.strokeStyle="#f4ede1";
-    cx.lineWidth=2;
-    cx.beginPath();
-    cx.arc(W/2,42,26,0,Math.PI*2);
-    cx.stroke();
-    // Torii icon inside
-    cx.strokeStyle="#f4ede1";
-    cx.lineWidth=1.5;
-    const tx=W/2-10, ty=30;
-    cx.beginPath();
-    cx.moveTo(tx,ty+4);cx.lineTo(tx+20,ty+4);// top bar
-    cx.moveTo(tx+2,ty+4);cx.lineTo(tx+2,ty+6);// left leg top
-    cx.moveTo(tx+18,ty+4);cx.lineTo(tx+18,ty+6);// right leg top
-    cx.moveTo(tx+4,ty+8);cx.lineTo(tx+16,ty+8);// mid bar
-    cx.moveTo(tx+4,ty+8);cx.lineTo(tx+4,ty+20);// left post
-    cx.moveTo(tx+16,ty+8);cx.lineTo(tx+16,ty+20);// right post
-    cx.stroke();
-
-    // Brand name
-    cx.fillStyle="#ffffff";
-    cx.font=`900 28px ${FONT}`;
-    cx.textAlign="center";
-    cx.fillText("KENZO ORIENTAL FOOD",W/2,96);
-
-    cx.fillStyle="#d4a843";
-    cx.font=`12px ${FONT}`;
-    cx.fillText(`Pedido confirmado  ·  Ticket #${ticketNum}`,W/2,114);
-
-    // dashed separator
-    function dashedLine(y){
-      cx.save();
-      cx.strokeStyle="rgba(244,237,225,0.2)";
-      cx.lineWidth=1;
-      cx.setLineDash([4,4]);
-      cx.beginPath();cx.moveTo(PAD,y);cx.lineTo(W-PAD,y);cx.stroke();
-      cx.restore();
-    }
-
-    let y=132;
-    dashedLine(y); y+=14;
-
-    // Meta
-    function metaRow(label,val){
-      cx.fillStyle="rgba(244,237,225,0.5)";
-      cx.font=`11px ${FONT}`;
-      cx.textAlign="left";
-      cx.fillText(label,PAD,y);
-      cx.fillStyle="#f4ede1";
-      cx.font=`bold 12px ${FONT}`;
-      cx.textAlign="right";
-      cx.fillText(val,W-PAD,y);
-      y+=LINE_H;
-    }
-    metaRow("Cliente",customerName);
-    metaRow("Entrega",zo.label);
-    metaRow("Data / Hora",dateStr);
-    if(notes.trim()) metaRow("Obs",notes.trim());
-
-    y+=4; dashedLine(y); y+=14;
-
-    // Header row
-    cx.fillStyle="#c21f2e";
-    cx.font=`bold 11px ${FONT}`;
-    cx.textAlign="left";
-    cx.fillText("ITEM",PAD,y);
-    cx.textAlign="right";
-    cx.fillText("VALOR",W-PAD,y);
-    y+=LINE_H;
-
-    // Items
-    items.forEach(it=>{
-      const label=`${it.qty}x  ${it.name}`;
-      const price=`R$ ${fmt(it.unitPrice*it.qty)}`;
-      cx.fillStyle="#f4ede1";
-      cx.font=`bold 13px ${FONT}`;
-      cx.textAlign="left";
-      // truncate if too long
-      let lbl=label;
-      while(cx.measureText(lbl).width>W-PAD*2-80 && lbl.length>5) lbl=lbl.slice(0,-1);
-      if(lbl!==label) lbl=lbl.trim()+"…";
-      cx.fillText(lbl,PAD,y);
-      cx.fillStyle="#d4a843";
-      cx.font=`bold 13px ${FONT}`;
-      cx.textAlign="right";
-      cx.fillText(price,W-PAD,y);
-      y+=18;
-      if(it.meta){
-        cx.fillStyle="rgba(244,237,225,0.4)";
-        cx.font=`11px ${FONT}`;
-        cx.textAlign="left";
-        cx.fillText(it.meta.substring(0,70),PAD+12,y);
-        y+=17;
+    // ── Helper: word-wrap a string into lines fitting maxW ──
+    function wrapText(cx, text, maxW, font){
+      cx.font = font;
+      const words = text.split(" ");
+      const lines = [];
+      let cur = "";
+      for(const w of words){
+        const test = cur ? cur+" "+w : w;
+        if(cx.measureText(test).width > maxW && cur){
+          lines.push(cur);
+          cur = w;
+        } else { cur = test; }
       }
+      if(cur) lines.push(cur);
+      return lines;
+    }
+
+    // ── Pre-calculate total height ──
+    // We need a dummy canvas to measure text first
+    const dummy = document.createElement("canvas");
+    dummy.width = W*SCALE; dummy.height = 10;
+    const dc = dummy.getContext("2d");
+    dc.scale(SCALE, SCALE);
+
+    const TEXT_W = W - PAD*2;
+    const PRICE_W = 80; // reserved right column for price
+    const ITEM_W  = TEXT_W - PRICE_W - 8;
+
+    let totalH = 0;
+    const LOGO_AREA = 100;   // circle + brand name + subtitle
+    const META_LH   = 22;
+    const META_ROWS = 3 + (notes.trim()?1:0);
+    const DASH_GAP  = 18;    // space for a dashed line row
+    const ITEM_LH   = 20;
+    const META_SMALL_LH = 17;
+
+    totalH += PAD + LOGO_AREA + DASH_GAP;
+    totalH += META_ROWS * META_LH + DASH_GAP;
+
+    // measure item rows
+    items.forEach(it=>{
+      totalH += ITEM_LH; // name line (bold)
+      if(it.meta){
+        const mlines = wrapText(dc, it.meta, ITEM_W, `11px ${F}`);
+        totalH += mlines.length * META_SMALL_LH;
+      }
+      totalH += 6; // gap between items
     });
 
-    y+=6; dashedLine(y); y+=16;
+    totalH += DASH_GAP + META_LH*2 + 4 + 28 + DASH_GAP + PAD; // totals + bottom pad
 
-    function sumRow(label,val,bold,highlight){
-      cx.fillStyle=highlight?"#d4a843":"rgba(244,237,225,0.65)";
-      cx.font=`${bold?"bold ":""}${bold?15:13}px ${FONT}`;
-      cx.textAlign="left";
-      cx.fillText(label,PAD,y);
-      cx.textAlign="right";
-      cx.fillText(val,W-PAD,y);
-      y+=bold?24:LINE_H;
+    // ── Create real canvas ──
+    const cv = document.createElement("canvas");
+    cv.width  = W * SCALE;
+    cv.height = Math.ceil(totalH) * SCALE;
+    const cx = cv.getContext("2d");
+    cx.scale(SCALE, SCALE);
+    const H = Math.ceil(totalH);
+
+    // Background
+    cx.fillStyle = COL_BG;
+    cx.fillRect(0, 0, W, H);
+
+    // ── Logo circle (black filled) ──
+    let y = PAD;
+    const CX = W/2, CR = 28;
+    cx.fillStyle = COL_BOLD;
+    cx.beginPath(); cx.arc(CX, y+CR, CR, 0, Math.PI*2); cx.fill();
+
+    // Torii inside circle (white strokes)
+    cx.strokeStyle = "#ffffff";
+    cx.lineWidth = 1.8;
+    cx.lineCap = "round";
+    const tx = CX-11, ty = y+CR-13;
+    cx.beginPath();
+    // top curved bar
+    cx.moveTo(tx-3, ty+4); cx.lineTo(tx+25, ty+4);   // top bar
+    cx.moveTo(tx, ty+4);   cx.lineTo(tx-2, ty+7);     // left overhang
+    cx.moveTo(tx+22, ty+4);cx.lineTo(tx+24, ty+7);    // right overhang
+    cx.moveTo(tx+2, ty+9); cx.lineTo(tx+20, ty+9);    // mid bar
+    cx.moveTo(tx+5, ty+9); cx.lineTo(tx+5,  ty+22);   // left post
+    cx.moveTo(tx+17,ty+9); cx.lineTo(tx+17, ty+22);   // right post
+    cx.stroke();
+
+    y += CR*2 + 12;
+
+    // Brand name
+    cx.fillStyle = COL_BOLD;
+    cx.font = `900 22px ${F}`;
+    cx.textAlign = "center";
+    cx.fillText("KENZO ORIENTAL FOOD", W/2, y);
+    y += 22;
+
+    // Subtitle
+    cx.fillStyle = COL_SUB;
+    cx.font = `12px ${F}`;
+    cx.fillText(`Pedido confirmado · Ticket #${ticketNum}`, W/2, y);
+    y += 18;
+
+    // ── Dashed line ──
+    function dashedLine(){
+      cx.save();
+      cx.strokeStyle = COL_DASH;
+      cx.lineWidth = 1;
+      cx.setLineDash([4, 4]);
+      cx.beginPath(); cx.moveTo(PAD, y); cx.lineTo(W-PAD, y); cx.stroke();
+      cx.restore();
+      y += 14;
     }
-    sumRow("Subtotal",`R$ ${fmt(sub)}`,false,false);
-    sumRow("Taxa de entrega",`R$ ${fmt(zo.price)}`,false,false);
-    y+=4;
-    cx.strokeStyle="rgba(244,237,225,0.25)";cx.lineWidth=1;cx.setLineDash([]);
-    cx.beginPath();cx.moveTo(PAD,y);cx.lineTo(W-PAD,y);cx.stroke();y+=8;
-    sumRow(`TOTAL`,`R$ ${fmt(tot)}`,true,true);
 
-    y+=8; dashedLine(y); y+=18;
+    dashedLine();
 
-    cx.fillStyle="rgba(244,237,225,0.4)";
-    cx.font=`11px ${FONT}`;
-    cx.textAlign="center";
-    cx.fillText("Apresente este comprovante ao entregador ou no balcão.",W/2,y);
-    y+=16;
-    cx.fillStyle="#c21f2e";
-    cx.font=`bold 13px ${FONT}`;
-    cx.fillText("(19) 98250-9707  ·  Peça pelo delivery",W/2,y);
+    // ── Meta rows ──
+    function metaRow(label, value){
+      cx.textAlign = "left";
+      cx.fillStyle = COL_TEXT;
+      cx.font = `bold 13px ${F}`;
+      cx.fillText(label+":", PAD, y);
+      const lw = cx.measureText(label+": ").width;
+      cx.font = `13px ${F}`;
+      cx.fillStyle = COL_TEXT;
+      cx.fillText(value, PAD+lw, y);
+      y += META_LH;
+    }
+    metaRow("Cliente",  customerName);
+    metaRow("Entrega",  zo.label);
+    metaRow("Data",     dateStr);
+    if(notes.trim()) metaRow("Obs", notes.trim());
+
+    y += 4;
+    dashedLine();
+
+    // ── Items ──
+    cx.textAlign = "left";
+    items.forEach(it=>{
+      const nameLabel = `${it.qty}x ${it.name}`;
+      const priceLabel = `R$ ${fmt(it.unitPrice * it.qty)}`;
+
+      // item name (bold, left) + price (right-aligned)
+      cx.fillStyle = COL_BOLD;
+      cx.font = `bold 13px ${F}`;
+      cx.textAlign = "left";
+
+      // Wrap name if needed
+      const nameLines = wrapText(cx, nameLabel, ITEM_W, `bold 13px ${F}`);
+      nameLines.forEach((line, i)=>{
+        cx.fillStyle = COL_BOLD;
+        cx.font = `bold 13px ${F}`;
+        cx.textAlign = "left";
+        cx.fillText(line, PAD, y + i*ITEM_LH);
+      });
+
+      // Price on first line, right column
+      cx.fillStyle = COL_TEXT;
+      cx.font = `13px ${F}`;
+      cx.textAlign = "right";
+      cx.fillText(priceLabel, W-PAD, y);
+
+      y += nameLines.length * ITEM_LH;
+
+      // meta subtitle (gray, smaller, wraps)
+      if(it.meta){
+        const mlines = wrapText(cx, it.meta, ITEM_W, `11px ${F}`);
+        mlines.forEach(ml=>{
+          cx.fillStyle = COL_SUB;
+          cx.font = `11px ${F}`;
+          cx.textAlign = "left";
+          cx.fillText(ml, PAD, y);
+          y += META_SMALL_LH;
+        });
+      }
+      y += 6;
+    });
+
+    y += 4;
+    dashedLine();
+
+    // ── Totals ──
+    function totalRow(label, value, bold){
+      cx.fillStyle = COL_TEXT;
+      cx.font = bold ? `bold 14px ${F}` : `13px ${F}`;
+      cx.textAlign = "left";
+      cx.fillText(label, PAD, y);
+      cx.textAlign = "right";
+      cx.fillText(value, W-PAD, y);
+      y += bold ? 26 : META_LH;
+    }
+    totalRow("Subtotal", `R$ ${fmt(sub)}`, false);
+    totalRow("Taxa de entrega", `R$ ${fmt(zo.price)}`, false);
+
+    // solid line before total
+    y += 4;
+    cx.strokeStyle = COL_TEXT;
+    cx.lineWidth = 1.5;
+    cx.setLineDash([]);
+    cx.beginPath(); cx.moveTo(PAD, y); cx.lineTo(W-PAD, y); cx.stroke();
+    y += 10;
+
+    // TOTAL row — bigger
+    cx.fillStyle = COL_BOLD;
+    cx.font = `900 18px ${F}`;
+    cx.textAlign = "left";
+    cx.fillText("Total", PAD, y);
+    cx.textAlign = "right";
+    cx.fillText(`R$ ${fmt(tot)}`, W-PAD, y);
+    y += 30;
+
+    dashedLine();
+
+    // footer note
+    cx.fillStyle = COL_SUB;
+    cx.font = `11px ${F}`;
+    cx.textAlign = "center";
+    cx.fillText("Apresente ao entregador ou no balcão · (19) 98250-9707", W/2, y);
 
     return cv;
   }
 
+  function getCanvasDataURL(){
+    return drawReceiptCanvas().toDataURL("image/png");
+  }
+
   function downloadPDF(){
-    const cv=drawReceiptCanvas();
-    const a=document.createElement("a");
-    a.download=`kenzo-pedido-${ticketNum}.png`;
-    a.href=cv.toDataURL("image/png");
+    const a = document.createElement("a");
+    a.download = `kenzo-pedido-${ticketNum}.png`;
+    a.href = getCanvasDataURL();
     a.click();
+  }
+
+  function openWA(){
+    // 1) Download the image
+    downloadPDF();
+    // 2) Small delay so download starts, then open WhatsApp
+    setTimeout(()=>{
+      const text = buildWAText();
+      window.open("https://wa.me/5519982509707?text="+encodeURIComponent(text), "_blank");
+    }, 400);
   }
 
   const box=document.getElementById("receipt-box");
