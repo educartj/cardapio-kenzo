@@ -164,7 +164,7 @@ footer .ph{color:var(--gold);font-weight:700;font-size:14px;margin-bottom:3px}
   <div class="hero-meta">
     <span>📞 <strong>(19) 98250-9707</strong></span>
     <span>🛵 <strong>Consulte taxa de entrega</strong></span>
-    <span>📅 <strong>Válido desde Março 2026</strong></span>
+    <span>💳 <strong>Dinheiro, Pix, Débito e Crédito</strong></span>
   </div>
 </header>
 
@@ -206,69 +206,68 @@ footer .ph{color:var(--gold);font-weight:700;font-size:14px;margin-bottom:3px}
 <script>
 /* ============ DATA ============ */
 const ZONES = [
-  {id:"ret", label:"Retirada", price:0},
-  {id:"z1",  label:"Centro", price:6},
-  {id:"z2",  label:" / até 6 km", price:10},
+  {id:"ret", label:"Retirar no balcão", price:0},
+  {id:"z1",  label:"Centro / até 3 km", price:6},
+  {id:"z2",  label:"Bairros próximos / até 6 km", price:10},
   {id:"z3",  label:"Zona estendida / até 10 km", price:15},
   {id:"z4",  label:"Fora do raio (consultar)", price:20},
 ];
 
 const CATS = [
-  {id:"yakisoba",title:"Yakisoba",note:"600g",desc:"Massa no ponto perfeito, legumes selecionados e tempero oriental exclusivo.",items:[
-    {id:"yk1",name:"Legumes",price:28},
-    {id:"yk2",name:"Frango",price:32},
-    {id:"yk3",name:"Carne",price:35},
-    {id:"yk4",name:"Misto",price:38},
+  {id:"yakisoba",title:"Yakisoba",note:"600g",desc:"Macarrão oriental com legumes frescos salteados envolvidos no molho especial da casa.",items:[
+    {id:"yk1",name:"Legumes",desc:"Legumes frescos salteados e macarrão oriental no molho especial da casa.",price:28},
+    {id:"yk2",name:"Frango",desc:"Cubos de frango com legumes frescos salteados e macarrão oriental no molho especial.",price:32},
+    {id:"yk3",name:"Carne",desc:"Cubos de carne com legumes frescos salteados e macarrão oriental no molho especial.",price:35},
+    {id:"yk4",name:"Misto",desc:"Cubos de carne e frango com legumes frescos salteados e macarrão oriental no molho especial.",price:38},
   ]},
   {id:"entradas",title:"Entradas",desc:"",items:[
     {id:"en1",name:"Carpaccio Salmão",desc:"Fatias de salmão com molho cítrico.",price:36},
-    {id:"en2",name:"Ceviche Salmão",desc:"Fatias de salmão com molho cítrico.",price:39},
+    {id:"en2",name:"Ceviche Salmão",desc:"Cubos de salmão com molho cítrico, cebola roxa, pimenta dedo de moça, cebolinha e especiarias. 200g",price:39},
   ]},
   {id:"sashimi",title:"Sashimi",desc:"Maçaricado acrescenta R$ 2,00 a cada 5 fatias.",items:[
-    {id:"sa1",name:"Sashimi 5 unidades",desc:"5 fatias finas de salmão",price:35},
-    {id:"sa2",name:"Sashimi 10 unidades",desc:"10 fatias finas de salmão",price:60},
-    {id:"sa3",name:"Sashimi 15 unidades",desc:"15 fatias finas de salmão",price:75},
+    {id:"sa1",name:"Sashimi 5 unidades",desc:"5 unidades de fatias finas de salmão",price:35},
+    {id:"sa2",name:"Sashimi 10 unidades",desc:"10 unidades de fatias finas de salmão",price:60},
+    {id:"sa3",name:"Sashimi 15 unidades",desc:"15 unidades de fatias finas de salmão",price:75},
   ]},
-  {id:"niguiri",title:"Niguiri",note:"6 unidades",desc:"",items:[
-    {id:"ni1",name:"Salmão",price:26},
-    {id:"ni2",name:"Salmão maçaricado",price:28},
-    {id:"ni3",name:"Kani",price:26},
-    {id:"ni4",name:"Skin",price:22},
+  {id:"niguiri",title:"Niguiri",note:"6 unidades",desc:"Bolinhos de arroz cobertos com fatia do ingrediente escolhido.",items:[
+    {id:"ni1",name:"Salmão",desc:"Bolinhos de arroz coberto com fatia de salmão.",price:26},
+    {id:"ni2",name:"Salmão Maçaricado",desc:"Bolinhos de arroz coberto com fatia de salmão maçaricado.",price:28},
+    {id:"ni3",name:"Kani",desc:"Bolinhos de arroz coberto com fatia de Kani.",price:26},
+    {id:"ni4",name:"Skin",desc:"Bolinhos de arroz coberto com fatia de Skin.",price:22},
   ]},
-  {id:"hossomaki",title:"Hossomaki",note:"8 unidades",desc:"",items:[
-    {id:"ho1",name:"Salmão",price:25},
-    {id:"ho2",name:"Salmão grelhado",price:24},
-    {id:"ho3",name:"Pepino",price:22},
-    {id:"ho4",name:"Kani-kama",price:25},
+  {id:"hossomaki",title:"Hossomaki",note:"8 unidades",desc:"Arroz enrolado com alga recheado com o ingrediente escolhido.",items:[
+    {id:"ho1",name:"Salmão",desc:"Arroz enrolado com alga recheado com salmão fresco.",price:25},
+    {id:"ho2",name:"Salmão grelhado",desc:"Arroz enrolado com alga recheado com salmão grelhado.",price:24},
+    {id:"ho3",name:"Pepino",desc:"Arroz enrolado com alga recheado com pepino.",price:22},
+    {id:"ho4",name:"Kani",desc:"Arroz enrolado com alga recheado com kani.",price:25},
   ]},
-  {id:"uramaki",title:"Uramaki",note:"8 unidades",desc:"",items:[
-    {id:"ur1",name:"Salmão",price:27},
-    {id:"ur2",name:"Salmão grelhado",price:26},
-    {id:"ur3",name:"Kani",price:27},
-    {id:"ur4",name:"Skin",price:25},
-    {id:"ur5",name:"Califórnia",price:27},
+  {id:"uramaki",title:"Uramaki",note:"8 unidades",desc:"Enrolado de arroz e gergilim com alga, recheado com cream cheese.",items:[
+    {id:"ur1",name:"Salmão",desc:"Enrolado de arroz e gergilim, alga, recheado com salmão cru e cream cheese.",price:27},
+    {id:"ur2",name:"Salmão grelhado",desc:"Enrolado de arroz e gergilim, alga recheado com salmão grelhado e cream cheese.",price:26},
+    {id:"ur3",name:"Kani",desc:"Enrolado de arroz e gergilim, alga, recheado com kani e cream cheese.",price:27},
+    {id:"ur4",name:"Skin",desc:"Enrolado de arroz e gergilim, alga, recheado com Skin e cream cheese.",price:25},
+    {id:"ur5",name:"Califórnia",desc:"Enrolado de arroz e gergilim, alga, recheado com pepino, manga, kani e cream cheese.",price:27},
   ]},
-  {id:"joy",title:"Joy",note:"6 unidades",desc:"",items:[
-    {id:"jo1",name:"Salmão",price:30},
-    {id:"jo2",name:"Salmão maçaricado",price:32},
-    {id:"jo3",name:"Pepino",price:28},
-    {id:"jo4",name:"Crispy ou Doritos",price:30},
+  {id:"joy",title:"Joy",note:"6 unidades",desc:"Bolinho de arroz envolto em lâmina do ingrediente escolhido.",items:[
+    {id:"jo1",name:"Salmão",desc:"Bolinho de arroz envolto em lâmina de salmão fresco cru.",price:30},
+    {id:"jo2",name:"Salmão maçaricado",desc:"Bolinho de arroz envolto em lâmina de salmão fresco maçaricado.",price:32},
+    {id:"jo3",name:"Pepino",desc:"Bolinho de arroz envolto em lâmina de pepino fresco.",price:28},
   ]},
-  {id:"hotroll",title:"Hot Roll",desc:"Crispy ou doritos: +R$ 3,00 por porção.",items:[
-    {id:"hr1",name:"Hot Salmão 10 unidades",price:35},
-    {id:"hr2",name:"Hot Salmão 20 unidades",price:60},
-    {id:"hr3",name:"Hot Aberto (salmão crú/grelhado/kani)",price:38},
+  {id:"hotroll",title:"Hot Roll",desc:"Adicional crispy ou doritos: +R$ 3,00 por porção.",items:[
+    {id:"hr1",name:"Hot Salmão — 10 unidades",price:35},
+    {id:"hr2",name:"Hot Salmão — 20 unidades",price:60},
+    {id:"hr3",name:"Hot Aberto",desc:"Escolha o recheio: salmão crú, salmão grelhado ou kani.",price:38},
   ]},
-  {id:"temaki",title:"Temaki",note:"Unidade",desc:"Crispy de couve ou doritos: +R$ 3,00.",items:[
-    {id:"te1",name:"Salmão simples",price:40},
-    {id:"te2",name:"Salmão crem e cebolinha",price:40},
-    {id:"te3",name:"Empanado",price:40},
+  {id:"temaki",title:"Temaki",note:"Unidade",desc:"",items:[
+    {id:"te1",name:"Salmão Simples",price:40},
+    {id:"te2",name:"Salmão Cream e Cebolinha",price:40},
+    {id:"te3",name:"Cubos Empanados",price:40},
     {id:"te4",name:"Salmão grelhado",price:40},
     {id:"te5",name:"Temaki Frito",price:40},
-    {id:"te6",name:"Temaki kani",price:40},
+    {id:"te6",name:"Kani",price:40},
   ]},
-  {id:"combos",title:"Combos",desc:"Não fazemos alteração de peças.",items:[
-    {id:"co1",name:"Combo 1 — 12 peças",price:32,combo:["2 uramakis Skin","2 uramakis salmão","2 hossomakis salmão","2 hossomakis kani","1 Joy Salmão, 1 Joy pepino","1 niguiri Salmão, 1 niguiri Skin"]},
+  {id:"combos",title:"Combos",desc:"Não fazemos alteração de peças em nenhum dos combos.",items:[
+    {id:"co1",name:"Combo 1 — 12 peças",price:32,combo:["2 uramakis Skin","2 uramakis salmão","2 hossomakis salmão, 2 hossomakis kani","1 Joy salmão, 1 Joy pepino","1 Niguiri salmão, 1 niguiri Skin"]},
     {id:"co2",name:"Combo 2 — 28 peças",price:62,combo:["3 niguiris salmão e 3 Skin","4 uramakis california e 4 salmão","4 Joy pepino","4 hossomakis salmão e 4 Kani","2 hossomakis de pepino"]},
     {id:"co3",name:"Combo 3 — 32 peças",price:72,combo:["2 niguiris salmão","2 niguiris skin","2 Joy pepino","2 Joy salmão","4 hossomakis salmão","4 hossomakis pepino","4 hossomakis kani","4 uramakis salmão","4 uramakis california","4 uramakis skin"]},
     {id:"co4",name:"Combo 4 — Hot + Temaki Frito",price:46,combo:["1 temaki de salmão frito","5 hot rolls de salmão"]},
@@ -276,31 +275,43 @@ const CATS = [
   ]},
   {id:"barcas",title:"Barcas",desc:"Não fazemos alteração de peças.",items:[
     {id:"ba1",name:"Barca Tradicional — 60 peças",price:150,combo:["4 niguiris salmão","4 niguiris skin","4 Joy pepino","4 Joy salmão","4 hossomakis salmão","4 hossomakis pepino","4 hossomakis kani","4 uramakis salmão","4 uramakis california","4 uramakis skin","10 sashimis salmão","10 hot roll"]},
-    {id:"ba2",name:"Barca Especial — 60 peças",price:180,combo:["8 uramakis salmão","4 uramakis especial","8 hossomakis salmão","4 hossomakis kani","4 niguiri salmão maçaricado","4 niguiri salmão raspa de limão","4 joy salmão","4 joy pepino com doritos","5 sashimis salmão","5 sashimis maçaricados","5 hot roll salmão crispy","5 hot roll salmão"]},
-    {id:"ba3",name:"Barca do Chef — 70 peças",desc:"Seleção surpresa do chef com peças nobres de salmão, diversificadas.",price:200},
+    {id:"ba2",name:"Barca Especial — 60 peças",price:180,combo:["8 uramakis salmão","4 uramakis especial","8 hossomakis salmão","4 hossomakis kani","4 niguiri salmão maçaricado","4 niguiri salmão raspa de limão","4 joy salmão","4 joy pepino com doritos","5 sashimis salmão","5 sashimis salmão maçaricados","5 hot roll salmão crispy","5 hot roll salmão"]},
+    {id:"ba3",name:"Barca do Chef — 70 peças",desc:"Uma barca super completa, 90% feita de peças nobres de salmão. O toque do chef sempre vai te surpreender.",price:200},
   ]},
-  {id:"burguer",title:"Sushi Burguer",desc:"Recheio à escolha: salmão crú, salmão grelhado ou kani com cream cheese e cebolinha.",items:[
-    {id:"bu1",name:"Sushi Burguer (unidade)",price:40},
+  {id:"burguer",title:"Sushi Burguer",note:"Unidade",desc:"Delicioso lanche feito de discos de arroz empanados e fritos, alface e o recheio escolhido.",items:[
+    {id:"bu1",name:"Salmão crú cream e cebolinha",price:40},
+    {id:"bu2",name:"Salmão grelhado cream e cebolinha",price:40},
+    {id:"bu3",name:"Kani cream e cebolinha",price:40},
+  ]},
+  {id:"oniguiri",title:"Oniguiri",desc:"Bolinho de arroz em formato triangular com recheio saboroso e envolto em alga (Nori).",items:[
+    {id:"on1",name:"Oniguiri — 1 unidade",desc:"Escolha: salmão crú, salmão grelhado, kani ou skin.",price:18},
+    {id:"on2",name:"Oniguiri — 2 unidades",desc:"Escolha: salmão crú, salmão grelhado, kani ou skin.",price:35},
+  ]},
+  {id:"guioza",title:"Guioza",note:"5 unidades",desc:"Pateizinhos macios, recheados com carne suína e legumes. Fritos.",items:[
+    {id:"gu1",name:"Guioza — 5 unidades",price:20},
+  ]},
+  {id:"harumaki",title:"Harumaki",note:"Rolinhos primavera · 5 unidades",desc:"Charutos de massa fina e crocante recheados com queijo. Fritos.",items:[
+    {id:"ha1",name:"Harumaki — 5 unidades",price:20},
   ]},
   {id:"adicionais",title:"Adicionais & Molhos",desc:"",items:[
     {id:"ad1",name:"Wasabi",price:2},
     {id:"ad2",name:"Gengibre",price:4},
     {id:"ad3",name:"Shoyu",price:1.5},
     {id:"ad4",name:"Tarê",price:1.5},
-    {id:"ad5",name:"Crispy couve",price:3},
-    {id:"ad6",name:"Crispy alho poró",price:3},
-    {id:"ad7",name:"Crispy batata doce",price:3},
-    {id:"ad8",name:"Doritos",price:3},
-    {id:"ad9",name:"Caldo de missoshiro 480ml",desc:"missoshiro e cebolinha",price:30},
+    {id:"ad5",name:"Crispy",price:3},
+    {id:"ad6",name:"Doritos",price:3},
+    {id:"ad7",name:"Hashi + Molheira",price:2},
+    {id:"ad8",name:"Adaptador de hashi",price:1.5},
+    {id:"ad9",name:"Caldo Missoshiro 480ml",desc:"Missoshiro e cebolinha.",price:30},
   ]},
 ];
 
 const POKE_GROUPS = [
-  {key:"base",    title:"Base",            rule:"Escolha 1", max:1, opts:["Arroz japonês","Mix de folhas"]},
-  {key:"prot",    title:"Proteína",        rule:"Escolha 1", max:1, opts:["Salmão crú","Salmão grelhado"]},
-  {key:"acomp",   title:"Acompanhamentos", rule:"Escolha 3", max:3, opts:["Cebola roxa","Doritos","Gengibre","Gergilim","Pimenta tailandesa","Crispy de couve","Crispy de alho poró","Crispy de batata doce","Amêndoas laminadas","Maionese"]},
-  {key:"guarn",   title:"Guarnição",       rule:"Escolha 3", max:3, opts:["Cream cheese","Pepino japonês","Nori (alga)","Cenoura","Tomate cereja","Kani","Manga","Morango"]},
-  {key:"molho",   title:"Molho",           rule:"Escolha 1", max:1, opts:["Shoyu","Tare","Cítrico"]},
+  {key:"base",  title:"Base",            rule:"Escolha 1", max:1, opts:["Arroz japonês","Mix (alface, cenoura e tomate cereja)"]},
+  {key:"prot",  title:"Proteína",        rule:"Escolha 1", max:1, opts:["Salmão crú","Salmão grelhado"]},
+  {key:"acomp", title:"Acompanhamentos", rule:"Escolha 3", max:3, opts:["Cebola roxa","Doritos","Gengibre","Gergilim","Pimenta tailandesa","Crispy de couve","Crispy de alho poró","Crispy de batata doce","Amêndoas laminadas","Maionese"]},
+  {key:"guarn", title:"Guarnição",       rule:"Escolha 3", max:3, opts:["Cream cheese","Pepino japonês","Nori (alga)","Cenoura","Tomate cereja","Kani","Manga","Morango","Cebolinha"]},
+  {key:"molho", title:"Molho",           rule:"Escolha 1", max:1, opts:["Shoyu","Tare","Cítrico"]},
 ];
 const POKE_SIZES = [{id:"500",label:"500 g",price:45},{id:"750",label:"750 g",price:60}];
 
@@ -627,7 +638,7 @@ function showReceipt(){
     cx.fillStyle = COL_SUB;
     cx.font = `11px ${F}`;
     cx.textAlign = "center";
-    cx.fillText("Muito Obrigado pela preferencia", W/2, y);
+    cx.fillText("Apresente ao entregador ou no balcão · (19) 98250-9707", W/2, y);
 
     return cv;
   }
@@ -709,7 +720,7 @@ function showReceipt(){
       <div class="rtot"><span>Subtotal</span><span>R$ ${fmt(sub)}</span></div>
       <div class="rtot"><span>Taxa de entrega</span><span>R$ ${fmt(zo.price)}</span></div>
       <div class="rtot grand"><span>Total</span><span>R$ ${fmt(tot)}</span></div>
-
+      <div class="rfoot">Apresente este ticket ao entregador ou no balcão.<em>Itadakimasu! 健康</em></div>
       <div class="rbtn-row">
         <button class="rbtn rbtn-wa" id="btn-wa" onclick="sendWA(this)">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
